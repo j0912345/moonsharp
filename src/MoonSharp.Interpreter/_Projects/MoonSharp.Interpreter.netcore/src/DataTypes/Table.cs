@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MoonSharp.Interpreter.DataStructs;
 
@@ -309,7 +310,14 @@ namespace MoonSharp.Interpreter
 		public DynValue Get(string key)
 		{
 			//Contract.Ensures(Contract.Result<DynValue>() != null);
-			return RawGet(key) ?? DynValue.Nil;
+			var val = RawGet(key) ?? DynValue.Nil;
+
+			if (val == DynValue.Nil || key == "0")
+			{
+				Console.Write("Warning: remember that lua arrays start from 1 and not 0 by default! returning nil.");
+			}
+
+			return val;
 		}
 
 		/// <summary>
@@ -318,9 +326,16 @@ namespace MoonSharp.Interpreter
 		/// <param name="key">The key.</param>
 		public DynValue Get(int key)
 		{
-			//Contract.Ensures(Contract.Result<DynValue>() != null);
-			return RawGet(key) ?? DynValue.Nil;
-		}
+            //Contract.Ensures(Contract.Result<DynValue>() != null);
+            var val = RawGet(key) ?? DynValue.Nil;
+
+            if (val == DynValue.Nil || key == 0)
+            {
+                Console.Write("Warning: remember that lua arrays start from 1 and not 0 by default! returning nil.");
+            }
+
+            return val;
+        }
 
 		/// <summary>
 		/// Gets the value associated with the specified key.
@@ -328,9 +343,16 @@ namespace MoonSharp.Interpreter
 		/// <param name="key">The key.</param>
 		public DynValue Get(DynValue key)
 		{
-			//Contract.Ensures(Contract.Result<DynValue>() != null);
-			return RawGet(key) ?? DynValue.Nil;
-		}
+            //Contract.Ensures(Contract.Result<DynValue>() != null);
+            var val = RawGet(key) ?? DynValue.Nil;
+
+            if (val == DynValue.Nil || key.Type == DataType.Number || key.Number == (double)0)
+            {
+                Console.Write("Warning: remember that lua arrays start from 1 and not 0 by default! returning nil.");
+            }
+
+            return val;
+        }
 
 		/// <summary>
 		/// Gets the value associated with the specified key.
@@ -339,9 +361,9 @@ namespace MoonSharp.Interpreter
 		/// <param name="key">The key.</param>
 		public DynValue Get(object key)
 		{
-			//Contract.Ensures(Contract.Result<DynValue>() != null);
-			return RawGet(key) ?? DynValue.Nil;
-		}
+            //Contract.Ensures(Contract.Result<DynValue>() != null);
+            return RawGet(key) ?? DynValue.Nil;
+        }
 
 		/// <summary>
 		/// Gets the value associated with the specified keys (expressed as an 
